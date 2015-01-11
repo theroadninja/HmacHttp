@@ -43,6 +43,11 @@ public class TestClient {
 		
 		String key = getLn("enter key>").trim();
 		
+		String extraField = getLn("enter extra parameter field (leave blank to omit: ").trim();
+		if(extraField != null && !"".equals(extraField)){
+			request.getMethodParameters().put("test", extraField);
+		}
+		
 		
 		System.out.println("date in auth header: " + request.getAuthDate());
 		

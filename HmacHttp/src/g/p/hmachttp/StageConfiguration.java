@@ -31,4 +31,8 @@ public class StageConfiguration {
 		this.serviceName = serviceName;
 	}
 	
+	public String getStageName(){
+		return this.stageName;
+	}
+	
 }

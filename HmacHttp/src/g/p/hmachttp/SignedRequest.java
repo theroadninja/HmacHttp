@@ -143,6 +143,12 @@ public interface SignedRequest {
 	public String getHttpPathEndFragment();
 	
 	/**
+	 * There are some composite fields that need to be concatenated
+	 * before an accurate signature can be calculated.
+	 */
+	public void prepareForSigning();
+	
+	/**
 	 * @return the HMAC hash which is part of the signature
 	 */
 	public String getSignature();

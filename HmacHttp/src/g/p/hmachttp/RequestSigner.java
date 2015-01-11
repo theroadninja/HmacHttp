@@ -41,6 +41,7 @@ public class RequestSigner {
 	private static String calcSignatureProtocol0(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException{
 		byte[] key = Hex.decodeHex(skey.toCharArray());
 		
+		request.prepareForSigning();
 		String signableRequest = request.getRequestId() + ";" + request.getMethodParameterString() + ";" + request.getMethod();
 		
 		key = hmac(key, request.getAuthDate());

@@ -164,4 +164,10 @@ public class SimpleSignedRequest implements SignedRequest {
 		this.userHeaders.put(name, value);
 	}
 
+
+
+	public void prepareForSigning() {
+		this.protocolHeaders.put(SignedRequest.HEADER_METHOD_PARAMETERS, getMethodParameterString());
+	}
+
 }
