@@ -1,4 +1,6 @@
 package g.p.hmachttp;
+import java.util.Map;
+
 import org.apache.http.client.methods.HttpPost;
 
 
@@ -50,17 +52,29 @@ public class SignedHttpPost extends SimpleSignedRequest {
 				method);
 	}
 	
+	
 	/**
+	 * Create an apache HttpPost object to send over the network.
 	 * You need to sign the request before calling this method; it will not auto-sign.
 	 * @return
 	 */
 	public HttpPost toHttpPost(){
+		return toHttpPost(this, this.protocolHeaders, this.webServiceHost, this.webServicePort, this.httpPathStart);
+	}
+	
+	
+	/**
+	 * This an effort to get towards a static implementation.
+	 */
+	private HttpPost toHttpPost(SignedRequest request, Map<String, String> protocolHeaders,
+			String webServiceHost, int webServicePort, String httpPathStart){
 		
-		final String url = this.webServiceHost + super.getStageName() + httpPathStart;
+		final String url = webServiceHost + request.getStageName() + httpPathStart;
 		
 		HttpPost post = new HttpPost(url);
 		
-		boolean legacy = SignedRequest.PROTOCOL_VERSION_LEGACY.equals(this.getProtocolVersion());
+		boolean legacy = SignedRequest.PROTOCOL_VERSION_LEGACY.equals(request.getProtocolVersion());
+		
 		
 		for(String name : protocolHeaders.keySet()){
 			
