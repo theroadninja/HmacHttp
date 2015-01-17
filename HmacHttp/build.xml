@@ -1,11 +1,20 @@
 <?xml version="1.0" ?>
-<!-- Configuration of the Ant build system to generate a Jar file --> 
+
+
+
+ 
 <project name="AntJarBuilder" default="CreateJar">
+    
+   <property name="build-directory" value="bin" />
+    
+    
+  
   <target name="CreateJar" description="Create Jar file">
-        <jar jarfile="bin/HmacHttp.jar"><!--  includes="**/*.class"  -->
+      	<mkdir dir="${build-directory}" />
+        <jar jarfile="${build-directory}/HmacHttp.jar"><!--  includes="**/*.class"  -->
             <fileset dir="bin" includes="**/*.class" />
     		<fileset dir="." includes="**/*.java"/>
-           </jar>
+        </jar>
   </target>
   <target name="DeleteJar" description="clean the jar file">
   	<delete file="bin/HmacHttp.jar"></delete>
