@@ -8,15 +8,33 @@
    <property name="build-directory" value="bin" />
     
     
-  
-  <target name="CreateJar" description="Create Jar file">
+  <!--  for clients -->
+  <target name="CreateJar1" description="Create Jar file">
       	<mkdir dir="${build-directory}" />
         <jar jarfile="${build-directory}/HmacHttp.jar"><!--  includes="**/*.class"  -->
             <fileset dir="bin" includes="**/*.class" />
     		<fileset dir="." includes="**/*.java"/>
         </jar>
   </target>
-  <target name="DeleteJar" description="clean the jar file">
+  
+  <target name="DeleteJar1" description="clean the jar file">
   	<delete file="bin/HmacHttp.jar"></delete>
   </target>
+  
+  
+  <!--  for servers -->
+  <target name="CreateJar2" description="Create Jar file">
+      	<mkdir dir="${build-directory}" />
+        <jar jarfile="${build-directory}/HmacHttpServlet.jar"><!--  includes="**/*.class"  -->
+            <fileset dir="bin" includes="**/*.class" />
+    		<fileset dir="." includes="**/*.java"/>
+        </jar>
+  </target>
+  
+  <target name="DeleteJar2" description="clean the jar file">
+  	<delete file="bin/HmacHttpServlet"></delete>
+  </target>
+  
+  
+  
 </project>
