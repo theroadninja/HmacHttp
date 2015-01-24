@@ -7,6 +7,8 @@
     
    <property name="build-directory" value="bin" />
     
+   
+   <target name="CreateJar" depends="CreateJar1,CreateJar2" />
     
   <!--  for clients -->
   <target name="CreateJar1" description="Create Jar file">
