@@ -50,7 +50,7 @@
         <javac destdir="bin" includeantruntime="false" >
             <src path="src"/>
             <src path="android.src"/>
-            <src path="tst"/>
+            <!--   src path="tst"/ -->
             <classpath refid="HmacHttp.classpath"/>
         </javac>
     </target>
