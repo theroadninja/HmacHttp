@@ -1,11 +1,17 @@
 package g.p.hmachttp;
 
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
+
+import org.apache.http.client.utils.URLEncodedUtils;
 
 /**
  * Implementation of Signed Request that stores everything in memory.
@@ -66,11 +72,41 @@ public class SimpleSignedRequest implements SignedRequest {
 		
 	}
 	
+	/** this is for deserialization */
+	protected SimpleSignedRequest(){
+		
+	}
+	
 
 	
 	protected String getPH(String name){
 		String s = protocolHeaders.get(name);
 		return s != null ? s.trim() : "";
+	}
+	private void setPH(String name, String value){
+		if(name == null) throw new IllegalArgumentException();
+		protocolHeaders.put(name, value);
+	}
+	
+	/** set fields based on http headers from an incoming request */
+	protected void setHeaders(Map<String, String> headers) throws Exception {
+		for(Map.Entry<String, String> entry : headers.entrySet()){
+			String name = entry.getKey();
+			
+			if(SignedRequest.HEADER_METHOD_PARAMETERS.equals(name)
+					|| SignedRequest.LegacyHeaders.PARAMETERS.equals(name)){
+				
+				//we need to reconstruct the parameter map
+				this.setMethodParameterString(entry.getValue());
+			}else if(SignedRequest.ALL_PROTOCOL_HEADERS.contains(name)){
+				setPH(name, entry.getValue());
+			}else if(SignedRequest.LegacyHeaders.LEGACY_TO_NEW.containsKey(name)){
+				name = SignedRequest.LegacyHeaders.LEGACY_TO_NEW.get(name);
+				setPH(name, entry.getValue());
+			}else{
+				userHeaders.put(name, entry.getValue());
+			}
+		}
 	}
 	
 	/**
@@ -79,6 +115,9 @@ public class SimpleSignedRequest implements SignedRequest {
 	 */
 	public String getProtocolVersion() {
 		return getPH(SignedRequest.HEADER_SENDER_BASEMAC_VERSION);
+	}
+	protected void setProtocolVersion(String s){
+		setPH(SignedRequest.HEADER_SENDER_BASEMAC_VERSION, s);
 	}
 
 	public String getRequestId() {
@@ -113,11 +152,43 @@ public class SimpleSignedRequest implements SignedRequest {
 	 */
 	public String getMethodParameterString(){
 		StringBuilder sb = new StringBuilder();
+		List<String> keys = new ArrayList<String>(methodParameters.keySet());
+		
+		//the sorting is to maintain consistency between object before and after deserialization
+		Collections.sort(keys);
+		
+		
+		//TODO:  we are not URL encoding these, which will cause a problem
+		//as soon as someone uses a '=' or a '&'
 		for(String k : methodParameters.keySet()){
 			sb.append("&").append(k).append("=").append(methodParameters.get(k));
 		}
 		
 		return sb.toString();
+	}
+	void setMethodParameterString(String methodParameterString) throws Exception {
+		
+		try{
+			//remove first ampersand
+			methodParameterString.replaceFirst("^&", "");
+			
+			String[] pairs = methodParameterString.split("&");
+		    for (String pair : pairs) {
+		    	if(pair == null || "".equals(pair.trim())){
+		    		continue;
+		    	}
+		    	String[] nameValue = pair.split("=");
+		    	if(nameValue.length != 2){
+		    		throw new Exception("invalid pair: " + pair);
+		    	}else{
+		    		this.methodParameters.put(nameValue[0], nameValue[1]);
+		    	}
+		    	
+		    }
+		}catch(Exception ex){
+			throw ex;
+		}
+		
 	}
 
 	public Map<String, String> getQueryStringParameters() {
@@ -126,6 +197,9 @@ public class SimpleSignedRequest implements SignedRequest {
 
 	public String getBody() {
 		return this.httpBody;
+	}
+	public void setBody(String s){
+		this.httpBody = (s == null) ? "" : s;
 	}
 	
 	public String getHttpPathEndFragment(){
@@ -162,6 +236,14 @@ public class SimpleSignedRequest implements SignedRequest {
 	
 	public void addHttpHeader(String name, String value){
 		this.userHeaders.put(name, value);
+	}
+	
+	/**
+	 * @return all headers that were set manuall (and which
+	 * 	are not part of the hmac protocol)
+	 */
+	public Map<String, String> getHttpHeaders(){
+		return Collections.unmodifiableMap(this.userHeaders);
 	}
 
 

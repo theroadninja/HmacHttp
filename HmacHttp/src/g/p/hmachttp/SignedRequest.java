@@ -1,28 +1,24 @@
 package g.p.hmachttp;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public interface SignedRequest {
-	
 
+	public static final class ProtocolVersions {
+		public static final String LEGACY = "0";
+		public static final String V1 = "1";
+	}
+
+	/**
+	 * @deprecated use the constants in ProtocolVersions instead
+	 */
+	@Deprecated
 	public static final String PROTOCOL_VERSION_LEGACY = "0";
 	
 	public static final String DATE_FORMAT_YYYYMMDDHH = "yyyyMMddHH";
-	
-	//TODO:  need a version zero that works with existing stuff...
-	
-	//TODO:  use json.org lib but change namespace so it wont conflict with android.
-	
-	//also maybe it should just be a data object?
-	// --- could start with memory signed request, and just transform it...
-	
-	//notes:  object constructors are always for outgoing
-	// factory is for incoming.
-	
-	
-	
-	
 	
 	//each of these get their own signing step
 	
@@ -33,7 +29,7 @@ public interface SignedRequest {
 	public static final String HEADER_STAGE_NAME = "X-stage-name";
 	public static final String HEADER_EXTRA_FIELD = "X-extra-field";
 
-	//these are combined before signing
+	//these are combined before signing in protocol version 0
 	public static final String HEADER_METHOD = "X-method";
 	public static final String HEADER_METHOD_PARAMETERS = "X-method-parameters";
 	
@@ -58,7 +54,7 @@ public interface SignedRequest {
 		public static final String SERVICE_NAME = "X-service-name";
 		
 		@SuppressWarnings("serial")
-		public static final Map<String, String> MAP = new TreeMap<String, String>(){{
+		public static final Map<String, String> NEW_TO_LEGACY = new TreeMap<String, String>(){{
 			put(HEADER_METHOD, METHOD);
 			put(HEADER_METHOD_PARAMETERS, PARAMETERS);
 			put(HEADER_SIGNATURE, SIGNATURE);
@@ -67,9 +63,29 @@ public interface SignedRequest {
 			put(HEADER_SERVICE_NAME, SERVICE_NAME);
 		}};
 		
+		public static final Map<String, String> LEGACY_TO_NEW = new TreeMap<String, String>();
+		static {
+			for(Map.Entry<String, String> entry : NEW_TO_LEGACY.entrySet()){
+				LEGACY_TO_NEW.put(entry.getValue(), entry.getKey());
+			}
+		}
+		
 	}
 	
-	
+	/** actually this does not include the legacy headers */
+	@SuppressWarnings("serial")
+	public static final Set<String> ALL_PROTOCOL_HEADERS = new TreeSet<String>(){{
+		add(HEADER_SENDER_BASEMAC_VERSION);
+		add(HEADER_REQUEST_ID);
+		add(HEADER_AUTH_DATE_YYYYMMDDHH);
+		add(HEADER_SERVICE_NAME);
+		add(HEADER_STAGE_NAME);
+		add(HEADER_EXTRA_FIELD);
+		add(HEADER_METHOD);
+		add(HEADER_METHOD_PARAMETERS);
+		add(HEADER_SIGNATURE);
+		add(HEADER_KEY_NAME);
+	}};
 	
 	
 	

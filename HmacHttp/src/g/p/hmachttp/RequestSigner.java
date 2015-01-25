@@ -12,7 +12,16 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 public class RequestSigner {
+	
 
+	
+
+	/**
+	 * 
+	 * @param request
+	 * @param recommending using hex string 64 chars long
+	 * @throws HmacHttpException
+	 */
 	public static void signRequest(SignedRequest request, String key) throws HmacHttpException {
 		if(request == null || key == null) throw new IllegalArgumentException("parameter cannot be null");
 		
@@ -30,8 +39,10 @@ public class RequestSigner {
 	public static String calcSignature(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, HmacHttpException {
 		if(request == null){ return null; }
 		
-		if(SignedRequest.PROTOCOL_VERSION_LEGACY.equals(request.getProtocolVersion())){
+		if(SignedRequest.ProtocolVersions.LEGACY.equals(request.getProtocolVersion())){
 			return calcSignatureProtocol0(request, skey);
+		}else if(SignedRequest.ProtocolVersions.V1.equals(request.getProtocolVersion())){
+			return RequestSignerV1.get().calcSignature(request, skey);
 		}else{
 			throw new HmacHttpException("protocol version not recognized: " + request.getProtocolVersion());
 		}
