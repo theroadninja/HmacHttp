@@ -49,7 +49,7 @@
    <!--  build step copied from build-project in build2.xml -->
    <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+        <javac destdir="bin" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
             <src path="android.src"/>
             <src path="tst"/>
