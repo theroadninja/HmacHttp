@@ -1,6 +1,5 @@
 package g.p.hmachttp;
 
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +9,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.UUID;
-
-import org.apache.http.client.utils.URLEncodedUtils;
 
 /**
  * Implementation of Signed Request that stores everything in memory.

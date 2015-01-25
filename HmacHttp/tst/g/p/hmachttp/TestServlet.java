@@ -16,6 +16,9 @@ import junit.framework.Assert;
  * HttpServletRequest, so the simplest way to test is to run this
  * servlet somewhere.
  * 
+ * This works best if you use one of those integrated eclipse
+ * plugins for running servlets in the IDE.
+ * 
  * @author Dave
  *
  */
@@ -99,24 +102,10 @@ public class TestServlet extends HttpServlet {
 		
 		
 		SignedServletRequest request = new SignedServletRequest(httpRequest);
+
 		
-		
-		
-		
-		
-		//assertEquals(outgoing, request);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		assertEquals(outgoing, request);
+
 		
 		String body = request.getBody();
 		
@@ -150,7 +139,7 @@ public class TestServlet extends HttpServlet {
 		assertEquals(hp.getMethodParameterString(), hp2.getMethodParameterString());
 		assertEquals(hp.getBody(), hp2.getBody());
 		assertEquals(hp.getHttpPathEndFragment(), hp2.getHttpPathEndFragment());
-		assertEquals(hp.getSignature(), hp2.getSignature());
+		//dont compare sig; we'll do that on our own:  assertEquals(hp.getSignature(), hp2.getSignature());
 		assertEquals(hp.extraSignedField(), hp2.extraSignedField());
 		assertEquals(hp.getKeyName(), hp2.getKeyName());
 		
