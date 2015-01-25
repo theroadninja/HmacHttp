@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="HmacHttp">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../../Program Files/eclipse.4.2.1"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.2"/>
+    <property name="source" value="1.3"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.10.0.v4_10_0_v20120426-0900/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+    </path>
+    <path id="HmacHttp.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/commons-codec-1.6.jar"/>
+        <pathelement location="lib.compile.only/commons-logging-1.1.3.jar"/>
+        <pathelement location="lib.compile.only/fluent-hc-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/httpclient-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/httpclient-cache-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/httpcore-4.3.2.jar"/>
+        <pathelement location="lib.compile.only/httpmime-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/servlet-api-3.1.jar"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="android.src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="tst">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="android.src"/>
+            <src path="tst"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="SignedHttpPostTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="g.p.hmachttp.SignedHttpPostTests" todir="${junit.output.dir}"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </junit>
+    </target>
+    <target name="SignedHttpPostTests.thereAndBackAgain">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="g.p.hmachttp.SignedHttpPostTests" todir="${junit.output.dir}"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </junit>
+    </target>
+    <target name="SignedHttpPostTests.thereAndBackAgainLegacy">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="g.p.hmachttp.SignedHttpPostTests" todir="${junit.output.dir}"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </junit>
+    </target>
+    <target name="SignedHttpPostTests.thereAndBackAgainV1">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="g.p.hmachttp.SignedHttpPostTests" todir="${junit.output.dir}"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </junit>
+    </target>
+    <target name="SignedServletRequestTests.test">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="g.p.hmachttp.SignedServletRequestTests" todir="${junit.output.dir}"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </junit>
+    </target>
+    <target name="TestServletClient">
+        <java classname="g.p.hmachttp.TestServletClient" failonerror="true" fork="yes">
+            <classpath refid="HmacHttp.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>

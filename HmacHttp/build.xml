@@ -8,10 +8,70 @@
    <property name="build-directory" value="bin" />
     
    
+   
+   <!--  copied from build2.xml -->
+   <path id="HmacHttp.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/commons-codec-1.6.jar"/>
+        <pathelement location="lib.compile.only/commons-logging-1.1.3.jar"/>
+        <pathelement location="lib.compile.only/fluent-hc-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/httpclient-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/httpclient-cache-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/httpcore-4.3.2.jar"/>
+        <pathelement location="lib.compile.only/httpmime-4.3.3.jar"/>
+        <pathelement location="lib.compile.only/servlet-api-3.1.jar"/>
+        <!--  path refid="JUnit 4.libraryclasspath"/ -->
+    </path>
+   
+   
+   <!--  init step copied from build2.xml -->
+   <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="android.src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <!--  >copy includeemptydirs="false" todir="bin">
+            <fileset dir="tst">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy -->
+    </target>
+   
+   
+   <!--  build step copied from build-project in build2.xml -->
+   <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="android.src"/>
+            <src path="tst"/>
+            <classpath refid="HmacHttp.classpath"/>
+        </javac>
+    </target>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    <target name="CreateJar" depends="CreateJar1,CreateJar2" />
     
   <!--  for clients -->
-  <target name="CreateJar1" description="Create Jar file">
+  <target name="CreateJar1" description="Create Jar file" depends="build">
       	<mkdir dir="${build-directory}" />
         <jar jarfile="${build-directory}/HmacHttp.jar"><!--  includes="**/*.class"  -->
             <fileset dir="bin" includes="**/*.class" />
@@ -25,7 +85,7 @@
   
   
   <!--  for servers -->
-  <target name="CreateJar2" description="Create Jar file">
+  <target name="CreateJar2" description="Create Jar file" depends="build">
       	<mkdir dir="${build-directory}" />
         <jar jarfile="${build-directory}/HmacHttpServlet.jar"><!--  includes="**/*.class"  -->
             <fileset dir="bin" includes="**/*.class" />
