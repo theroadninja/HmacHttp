@@ -7,7 +7,8 @@
     
    <property name="build-directory" value="bin" />
     
-   
+   <!--  copied from build2.xml ...for javac task... -->
+   <property name="target" value="1.2"/>
    
    <!--  copied from build2.xml -->
    <path id="HmacHttp.classpath">
