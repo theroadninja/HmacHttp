@@ -24,6 +24,45 @@ public class SignedHttpPostTests {
 			/*httpPathStart*/   "/servlet/path/",
 			/*serviceName*/		"HmacTestService");
 	
+	
+	@Test
+	public void thereAndBackAgainKeyTest() throws Exception {
+		
+		StageConfiguration keyTest = new StageConfiguration(
+				"test",
+				SignedRequest.ProtocolVersions.KEY_CHECK,
+				"http://example.com",
+				8080,
+				"/servlet/path/",
+				"HmacTestService");
+		
+		SignedHttpPost hp = new SignedHttpPost(keyTest, "testMethod");		
+		assertEquals(hp, new SignedHttpPost(hp.toHttpPost()));
+		
+		String k = "fc5d5078";
+		RequestSigner.signRequest(hp, k);
+		assertEquals(hp, new SignedHttpPost(hp.toHttpPost()));
+	}
+	
+	@Test
+	public void thereAndBackAgainTroubleshoot1Test() throws Exception {
+		
+		StageConfiguration keyTest = new StageConfiguration(
+				"test",
+				SignedRequest.ProtocolVersions.TROUBLESHOOT_1,
+				"http://example.com",
+				8080,
+				"/servlet/path/",
+				"HmacTestService");
+		
+		SignedHttpPost hp = new SignedHttpPost(keyTest, "testMethod");		
+		assertEquals(hp, new SignedHttpPost(hp.toHttpPost()));
+		
+		String k = "fc5d5078";
+		RequestSigner.signRequest(hp, k);
+		assertEquals(hp, new SignedHttpPost(hp.toHttpPost()));
+	}
+	
 	@Test
 	public void thereAndBackAgainLegacy() throws Exception {
 		

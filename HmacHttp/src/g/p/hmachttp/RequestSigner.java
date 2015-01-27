@@ -38,8 +38,16 @@ public class RequestSigner {
 	
 	public static String calcSignature(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, HmacHttpException {
 		if(request == null){ return null; }
-		
-		if(SignedRequest.ProtocolVersions.LEGACY.equals(request.getProtocolVersion())){
+	
+		if(SignedRequest.ProtocolVersions.KEY_CHECK.equals(request.getProtocolVersion())){
+	
+			return RequestSignerAux.calcKeyProtocol(request, skey);
+			
+		}else if(SignedRequest.ProtocolVersions.TROUBLESHOOT_1.equals(request.getProtocolVersion())){
+			
+			return RequestSignerAux.calcTroubleshoot1Protocol(request, skey);
+			
+		}else if(SignedRequest.ProtocolVersions.LEGACY.equals(request.getProtocolVersion())){
 			return calcSignatureProtocol0(request, skey);
 		}else if(SignedRequest.ProtocolVersions.V1.equals(request.getProtocolVersion())){
 			return RequestSignerV1.get().calcSignature(request, skey);

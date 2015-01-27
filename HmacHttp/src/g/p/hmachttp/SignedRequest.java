@@ -8,7 +8,16 @@ import java.util.TreeSet;
 public interface SignedRequest {
 
 	public static final class ProtocolVersions {
+		
+		/** protocol for doing a very simple signing simply mean to check the key */
+		public static final String KEY_CHECK = "key";
+		
+		/** protocol that checks fewer fields; for troubleshooting signing problems */
+		public static final String TROUBLESHOOT_1 = "t1";
+		
+		/** to match old-ass hmac signing that predates this library */
 		public static final String LEGACY = "0";
+		
 		public static final String V1 = "1";
 	}
 
