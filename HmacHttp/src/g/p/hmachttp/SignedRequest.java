@@ -93,6 +93,8 @@ public interface SignedRequest {
 	
 	public String getRequestId();
 	
+	public void setRequestId(String requestId);
+	
 	/** 
 	 * @return the date that is part of the signature to be compared with the current
 	 * date in order to prevent old requests from being repeated 

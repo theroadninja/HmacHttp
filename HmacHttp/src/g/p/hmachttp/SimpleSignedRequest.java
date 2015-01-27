@@ -120,6 +120,9 @@ public class SimpleSignedRequest implements SignedRequest {
 	public String getRequestId() {
 		return getPH(SignedRequest.HEADER_REQUEST_ID);
 	}
+	public void setRequestId(String s){
+		setPH(SignedRequest.HEADER_REQUEST_ID, s);
+	}
 
 	public String getAuthDate() {
 		return getPH(SignedRequest.HEADER_AUTH_DATE_YYYYMMDDHH);
