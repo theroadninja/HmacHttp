@@ -81,15 +81,31 @@ public class SignedHttpPost extends SimpleSignedRequest {
 	 * @return
 	 */
 	public HttpPost toHttpPost(){
-		return toHttpPost(this, this.protocolHeaders, this.webServiceHost, this.webServicePort, this.httpPathStart);
+		
+		final String url = webServiceHost + ":" + webServicePort + "/" + getStageName() + "/" + httpPathStart;
+		
+		//return toHttpPost(this, this.protocolHeaders, this.webServiceHost, this.webServicePort, this.httpPathStart);
+		
+		return toHttpPost(this, this.protocolHeaders, url);
+	}
+	
+	/** version of toHttpPost() that lets you override the url */
+	public HttpPost toHttpPost(String url){
+		return toHttpPost(this, this.protocolHeaders, url);
 	}
 	
 	
 	/**
 	 * This an effort to get towards a static implementation.
 	 */
-	private HttpPost toHttpPost(SignedRequest request, Map<String, String> protocolHeaders,
-			String webServiceHost, int webServicePort, String httpPathStart){
+	private HttpPost toHttpPost(
+			SignedRequest request, 
+			Map<String, String> protocolHeaders,
+			String url
+			//String webServiceHost, 
+			//int webServicePort, 
+			//String httpPathStart
+			){
 		
 		//if we dont do this, the http header wont be set
 		//this should only be a problem if we send without signing
@@ -97,7 +113,7 @@ public class SignedHttpPost extends SimpleSignedRequest {
 		
 		
 		
-		final String url = webServiceHost + ":" + webServicePort + "/" + request.getStageName() + httpPathStart;
+		
 		
 		HttpPost post = new HttpPost(url);
 		
