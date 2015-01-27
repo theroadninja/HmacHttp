@@ -76,6 +76,31 @@ public class SignedHttpPostTests {
 		assertEquals(hp, new SignedHttpPost(hp.toHttpPost()));
 	}
 	
+	@Test
+	public void testOverrideUrl() throws Exception {
+		
+		SignedHttpPost hp = new SignedHttpPost(testStageV1, "testMethod");		
+		
+		hp.setExtraSignedField("extra");
+		hp.setKeyName("tango");
+		hp.setBody("test\n \n \n \t a \n \n c \n b  ");
+		hp.getMethodParameters().put("a", "b");
+		hp.getMethodParameters().put("c", "d");
+		
+		String k = "fc5d5078";
+		RequestSigner.signRequest(hp, k);
+		Assert.assertTrue(! hp.getSignature().equals(""));
+		assertEquals(hp, new SignedHttpPost(hp.toHttpPost(urlFor(testStageV1))));
+	}
+	
+	public static String urlFor(StageConfiguration stageConfig){
+		//default hmac url:
+		//final String url = webServiceHost + ":" + webServicePort + "/" + getStageName() + "/" + httpPathStart;
+		
+		//we dont have stage in the url:
+		return stageConfig.httpProtocolAndHost + ":" + stageConfig.port + "/" + stageConfig.httpPathStart;
+	}
+	
 	public static void assertEquals(SignedHttpPost hp, SignedHttpPost hp2){
 		Assert.assertEquals(hp.getProtocolVersion(), hp2.getProtocolVersion());
 		Assert.assertEquals(hp.getRequestId(), hp2.getRequestId());
