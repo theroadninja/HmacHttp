@@ -17,6 +17,8 @@ public class SignedHttpPost extends SimpleSignedRequest {
 	
 	/** portion of the http path that does NOT change between requests, e.g. servlet name */
 	private final String httpPathStart;
+	
+	private boolean addStageToPath = true;
 
 	/**
 	 * 
@@ -55,6 +57,8 @@ public class SignedHttpPost extends SimpleSignedRequest {
 				stageConfig.serviceName,
 				stageConfig.stageName,
 				method);
+		
+		this.addStageToPath = stageConfig.getAddStageToPath();
 	}
 	
 	SignedHttpPost(HttpPost httpPost) throws Exception {
@@ -64,6 +68,7 @@ public class SignedHttpPost extends SimpleSignedRequest {
 		this.webServiceHost = url.getHost();
 		this.webServicePort = url.getPort();
 		this.httpPathStart = url.getPath();
+		this.addStageToPath = false;
 		
 		Map<String, String> headers = getHeaders(httpPost);
 		super.setHeaders(headers);
@@ -82,7 +87,17 @@ public class SignedHttpPost extends SimpleSignedRequest {
 	 */
 	public HttpPost toHttpPost(){
 		
-		final String url = webServiceHost + ":" + webServicePort + "/" + getStageName() + "/" + httpPathStart;
+		//TODO: StringBuilder url = new StringBuilder();
+		//TODO: check for existing '/' because jetty may break on double slashes
+		
+		String url = null;
+		if(this.addStageToPath){
+			
+			url = webServiceHost + ":" + webServicePort + "/" + getStageName() + "/" + httpPathStart;
+		}else{
+			url = webServiceHost + ":" + webServicePort + "/" + httpPathStart;
+		}
+		
 		
 		//return toHttpPost(this, this.protocolHeaders, this.webServiceHost, this.webServicePort, this.httpPathStart);
 		

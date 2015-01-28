@@ -16,6 +16,12 @@ public class StageConfiguration {
 	public final String httpPathStart;
 	public final String serviceName;
 	
+	/** 
+	 * When true, adds the stage after the port and before the
+	 * 'httpPathStart' fragment
+	 */
+	private boolean addStageToPath = true;
+	
 	public StageConfiguration(String stageName,
 			String protocolVersion,
 			String httpProtocolAndHost,
@@ -33,6 +39,15 @@ public class StageConfiguration {
 	
 	public String getStageName(){
 		return this.stageName;
+	}
+	
+	public StageConfiguration setAddStageToPath(boolean b){
+		this.addStageToPath = b;
+		return this;
+	}
+	
+	public boolean getAddStageToPath(){
+		return addStageToPath;
 	}
 	
 }
