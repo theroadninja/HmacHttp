@@ -178,11 +178,14 @@ public class SimpleSignedRequest implements SignedRequest {
 		    		continue;
 		    	}
 		    	String[] nameValue = pair.split("=");
-		    	if(nameValue.length != 2){
-		    		throw new Exception("invalid pair: " + pair);
-		    	}else{
+		    	if(nameValue.length == 1){
+		    		this.methodParameters.put(nameValue[0], "");
+		    	}else if(nameValue.length == 2){
 		    		this.methodParameters.put(nameValue[0], nameValue[1]);
+		    	}else{
+		    		throw new Exception("invalid pair: " + pair);		    		
 		    	}
+		    	
 		    	
 		    }
 		}catch(Exception ex){
