@@ -72,6 +72,12 @@ public class RequestSigner {
 	}
 	
 	public static byte[] hmac(byte[] keyBytes, String message) throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException {
+		if(keyBytes == null){
+			throw new IllegalArgumentException("keyBytes cannot be null");
+		}
+		if(message == null){
+			message = "";
+		}
 		
 		final String HMAC = "HmacSHA256";
 		
