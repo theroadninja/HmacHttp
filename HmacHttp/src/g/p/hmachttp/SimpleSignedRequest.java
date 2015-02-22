@@ -167,6 +167,9 @@ public class SimpleSignedRequest implements SignedRequest {
 		return sb.toString();
 	}
 	void setMethodParameterString(String methodParameterString) throws Exception {
+		if(methodParameterString == null){
+			return;
+		}
 		
 		try{
 			//remove first ampersand
