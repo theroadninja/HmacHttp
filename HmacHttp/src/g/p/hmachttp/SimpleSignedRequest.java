@@ -119,7 +119,7 @@ public class SimpleSignedRequest implements SignedRequest {
 		for(Map.Entry<String, String> entry : headers.entrySet()){
 			String name = entry.getKey();
 			
-			if(SignedRequest.HEADER_METHOD_PARAMETERS.equals(name)
+			if(SignedRequest.HEADER_METHOD_PARAMETERS.equalsIgnoreCase(name)
 					|| SignedRequest.LegacyHeaders.PARAMETERS.equals(name)){
 				
 				//we need to reconstruct the parameter map
