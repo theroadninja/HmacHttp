@@ -85,6 +85,11 @@ public class SimpleSignedRequest implements SignedRequest {
 		protocolHeaders.put(name, value);
 	}
 	
+	/** TODO:  remove this */
+	public Map<String, String> getProtocolHeadersForDebug(){
+		return this.protocolHeaders;
+	}
+	
 	/** set fields based on http headers from an incoming request */
 	protected void setHeaders(Map<String, String> headers) throws Exception {
 		for(Map.Entry<String, String> entry : headers.entrySet()){
