@@ -77,7 +77,7 @@ public class SimpleSignedRequest implements SignedRequest {
 
 	
 	protected String getPH(String name){
-		String s = protocolHeaders.get(name);
+		String s = name == null ? null : protocolHeaders.get(name);
 		return s != null ? s.trim() : "";
 	}
 	private void setPH(String name, String value){
@@ -90,6 +90,30 @@ public class SimpleSignedRequest implements SignedRequest {
 		return this.protocolHeaders;
 	}
 	
+	/**
+	 * Apparently a simple set comparison will not work because
+	 * certain languages (ruby) change the capitalization of some
+	 * letters in the http headers.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private String isProtocolHeader(String name){
+		for(String s : SignedRequest.ALL_PROTOCOL_HEADERS){
+			if(s.equalsIgnoreCase(name)){
+				return s;
+			}
+		}
+		
+		for(String s : SignedRequest.LegacyHeaders.LEGACY_TO_NEW.keySet()){
+			if(s.equalsIgnoreCase(name)){
+				return SignedRequest.LegacyHeaders.LEGACY_TO_NEW.get(s);
+			}
+		}
+		
+		return null;
+	}
+
 	/** set fields based on http headers from an incoming request */
 	protected void setHeaders(Map<String, String> headers) throws Exception {
 		for(Map.Entry<String, String> entry : headers.entrySet()){
@@ -100,11 +124,18 @@ public class SimpleSignedRequest implements SignedRequest {
 				
 				//we need to reconstruct the parameter map
 				this.setMethodParameterString(entry.getValue());
-			}else if(SignedRequest.ALL_PROTOCOL_HEADERS.contains(name)){
-				setPH(name, entry.getValue());
-			}else if(SignedRequest.LegacyHeaders.LEGACY_TO_NEW.containsKey(name)){
+				continue;
+			}
+			
+				
+			String pname = isProtocolHeader(name); 
+			//}else if(SignedRequest.ALL_PROTOCOL_HEADERS.contains(name)){
+			if(pname != null){
+				setPH(pname, entry.getValue());
+			/*}else if(SignedRequest.LegacyHeaders.LEGACY_TO_NEW.containsKey(name)){
 				name = SignedRequest.LegacyHeaders.LEGACY_TO_NEW.get(name);
 				setPH(name, entry.getValue());
+				*/
 			}else{
 				userHeaders.put(name, entry.getValue());
 			}
@@ -218,21 +249,25 @@ public class SimpleSignedRequest implements SignedRequest {
 	}
 
 	public String getSignature() {
-		return this.protocolHeaders.get(SignedRequest.HEADER_SIGNATURE);
+		//return this.protocolHeaders.get(SignedRequest.HEADER_SIGNATURE);
+		return getPH(SignedRequest.HEADER_SIGNATURE);
 	}
 
 	public void setSignature(String s) {
-		this.protocolHeaders.put(SignedRequest.HEADER_SIGNATURE, s);
+		//this.protocolHeaders.put(SignedRequest.HEADER_SIGNATURE, s);
+		setPH(SignedRequest.HEADER_SIGNATURE, s);
 	}
 
 
 	public String extraSignedField() {
-		return this.protocolHeaders.get(SignedRequest.HEADER_EXTRA_FIELD);
+		return this.getPH(SignedRequest.HEADER_EXTRA_FIELD);
+		//return this.protocolHeaders.get(SignedRequest.HEADER_EXTRA_FIELD);
 	}
 
 
 	public void setExtraSignedField(String s) {
-		this.protocolHeaders.put(SignedRequest.HEADER_EXTRA_FIELD, s);
+		//this.protocolHeaders.put(SignedRequest.HEADER_EXTRA_FIELD, s);
+		setPH(SignedRequest.HEADER_EXTRA_FIELD, s);
 		
 	}
 
@@ -241,7 +276,8 @@ public class SimpleSignedRequest implements SignedRequest {
 	}
 
 	public void setKeyName(String keyName) {
-		this.protocolHeaders.put(SignedRequest.HEADER_KEY_NAME, keyName);
+		//this.protocolHeaders.put(SignedRequest.HEADER_KEY_NAME, keyName);
+		setPH(SignedRequest.HEADER_KEY_NAME, keyName);
 		
 	}
 	
@@ -260,7 +296,8 @@ public class SimpleSignedRequest implements SignedRequest {
 
 
 	public void prepareForSigning() {
-		this.protocolHeaders.put(SignedRequest.HEADER_METHOD_PARAMETERS, getMethodParameterString());
+		//this.protocolHeaders.put(SignedRequest.HEADER_METHOD_PARAMETERS, getMethodParameterString());
+		setPH(SignedRequest.HEADER_METHOD_PARAMETERS, getMethodParameterString());
 	}
 
 }
