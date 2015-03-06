@@ -132,6 +132,26 @@ public class SignedHttpPostTests {
 		assertEquals(hp, new SignedHttpPost(hp.toHttpPost(urlFor(testStageV1))));
 	}
 	
+	@Test
+	public void testUrlParameter() throws Exception {
+		
+		// &appName=scs&versionCode=11&markActive=false
+		
+		SignedHttpPost hp = new SignedHttpPost(legacyTestStage, "testMethod");
+		hp.getMethodParameters().put("appName", "scs");
+		hp.getMethodParameters().put("versionCode", "11");
+		//hp.getMethodParameters().put("fileUrl", "skincaresidekick.com/deployment/scs/test/SkinCareSidekick-2014-12-19.apk");
+		hp.getMethodParameters().put("markActive", "false");
+		
+		String k = "fc5d5078";
+		RequestSigner.signRequest(hp, k);
+		
+		SignedHttpPost hp2 = new SignedHttpPost(hp.toHttpPost());
+		
+		Assert.assertEquals(hp.getSignature(), hp2.getSignature());
+		
+	}
+	
 	public static String urlFor(StageConfiguration stageConfig){
 		//default hmac url:
 		//final String url = webServiceHost + ":" + webServicePort + "/" + getStageName() + "/" + httpPathStart;

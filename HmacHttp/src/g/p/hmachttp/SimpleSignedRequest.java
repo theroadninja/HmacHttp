@@ -1,5 +1,6 @@
 package g.p.hmachttp;
 
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +45,10 @@ public class SimpleSignedRequest implements SignedRequest {
 	 * Different from queryStringParameters only in the location of transport.
 	 */
 	private final Map<String, String> methodParameters = new TreeMap<String, String>();
+	
+	
+	/** optionally set during deserialization to aid with debuggging; never use */
+	private String methodParamStringForDebug = null;
 	
 	
 	/**
@@ -206,6 +211,7 @@ public class SimpleSignedRequest implements SignedRequest {
 		if(methodParameterString == null){
 			return;
 		}
+		this.methodParamStringForDebug = methodParameterString;
 		
 		try{
 			//remove first ampersand
@@ -298,6 +304,20 @@ public class SimpleSignedRequest implements SignedRequest {
 	public void prepareForSigning() {
 		//this.protocolHeaders.put(SignedRequest.HEADER_METHOD_PARAMETERS, getMethodParameterString());
 		setPH(SignedRequest.HEADER_METHOD_PARAMETERS, getMethodParameterString());
+	}
+	
+	public void print(PrintWriter pw){
+		pw.println("http headers:");
+		for(Map.Entry<String, String> entry : protocolHeaders.entrySet()){
+			pw.println(entry.getKey() + ": " + entry.getValue());
+		}
+		for(Map.Entry<String, String> entry : userHeaders.entrySet()){
+			pw.println(entry.getKey() + ": " + entry.getValue());
+		}
+		pw.println("end headers");
+		pw.println("method parameter string: " + methodParamStringForDebug);
+		pw.println("http body: " + httpBody);
+		pw.println("httpPathEndFragment: " + httpPathEndFragment);
 	}
 
 }
