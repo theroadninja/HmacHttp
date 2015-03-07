@@ -15,6 +15,12 @@ public interface SignedRequest {
 		/** protocol that checks fewer fields; for troubleshooting signing problems */
 		public static final String TROUBLESHOOT_1 = "t1";
 		
+		public static final String TROUBLESHOOT_2 = "t2";
+		
+		public static final String TROUBLESHOOT_3 = "t3";
+		
+		public static final String TROUBLESHOOT_4 = "t4";
+		
 		/** to match old-ass hmac signing that predates this library */
 		public static final String LEGACY = "0";
 		

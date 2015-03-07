@@ -43,4 +43,58 @@ public class RequestSignerAux {
 		return new String(Base64.encodeBase64(key)).replaceAll("=+$", "");
 		
 	}
+	
+	public static String calcTroubleshoot2Protocol(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+		byte[] key = Hex.decodeHex(skey.toCharArray());
+		
+		//request.prepareForSigning();
+		String protocolVersion = request.getProtocolVersion();
+		protocolVersion = (protocolVersion == null) ? "" : protocolVersion.trim().toLowerCase();
+		
+		
+		key = RequestSigner.hmac(key, protocolVersion);
+		//key = RequestSigner.hmac(key, request.getRequestId());
+		//key = RequestSigner.hmac(key, request.getAuthDate());
+		//key = RequestSigner.hmac(key, request.getServiceName());
+		//key = RequestSigner.hmac(key, request.getStageName());
+		//key = RequestSigner.hmac(key, request.getMethod());
+		
+		return new String(Base64.encodeBase64(key)).replaceAll("=+$", "");
+	}
+	
+	public static String calcTroubleshoot3Protocol(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+		byte[] key = Hex.decodeHex(skey.toCharArray());
+		
+		//request.prepareForSigning();
+		String protocolVersion = request.getProtocolVersion();
+		protocolVersion = (protocolVersion == null) ? "" : protocolVersion.trim().toLowerCase();
+		
+		
+		key = RequestSigner.hmac(key, protocolVersion);
+		//key = RequestSigner.hmac(key, request.getRequestId());
+		key = RequestSigner.hmac(key, request.getAuthDate());
+		//key = RequestSigner.hmac(key, request.getServiceName());
+		//key = RequestSigner.hmac(key, request.getStageName());
+		//key = RequestSigner.hmac(key, request.getMethod());
+		
+		return new String(Base64.encodeBase64(key)).replaceAll("=+$", "");
+	}
+	
+	public static String calcTroubleshoot4Protocol(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException {
+		byte[] key = Hex.decodeHex(skey.toCharArray());
+		
+		//request.prepareForSigning();
+		String protocolVersion = request.getProtocolVersion();
+		protocolVersion = (protocolVersion == null) ? "" : protocolVersion.trim().toLowerCase();
+		
+		
+		key = RequestSigner.hmac(key, protocolVersion);
+		//key = RequestSigner.hmac(key, request.getRequestId());
+		key = RequestSigner.hmac(key, request.getAuthDate());
+		key = RequestSigner.hmac(key, request.getStageName());
+		key = RequestSigner.hmac(key, request.getServiceName());
+		//key = RequestSigner.hmac(key, request.getMethod());
+		
+		return new String(Base64.encodeBase64(key)).replaceAll("=+$", "");
+	}
 }

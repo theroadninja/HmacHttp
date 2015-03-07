@@ -1,6 +1,8 @@
 package g.p.hmachttp;
 
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +78,7 @@ public class SimpleSignedRequest implements SignedRequest {
 	
 	/** this is for deserialization */
 	protected SimpleSignedRequest(){
-		
+		protocolHeaders.put(SignedRequest.HEADER_AUTH_DATE_YYYYMMDDHH, toRequestDateString(new Date()));
 	}
 	
 
@@ -169,14 +171,23 @@ public class SimpleSignedRequest implements SignedRequest {
 		return getPH(SignedRequest.HEADER_AUTH_DATE_YYYYMMDDHH);
 	}
 
+	public void setServiceName(String s){
+		setPH(SignedRequest.HEADER_SERVICE_NAME, s);
+	}
 	public String getServiceName() {
 		return getPH(SignedRequest.HEADER_SERVICE_NAME);
 	}
 
+	public void setStageName(String s){
+		setPH(SignedRequest.HEADER_STAGE_NAME, s);
+	}
 	public String getStageName() {
 		return getPH(SignedRequest.HEADER_STAGE_NAME);
 	}
 
+	public void setMethod(String s){
+		setPH(SignedRequest.HEADER_METHOD, s);
+	}
 	public String getMethod() {
 		return getPH(SignedRequest.HEADER_METHOD);
 	}
@@ -199,11 +210,32 @@ public class SimpleSignedRequest implements SignedRequest {
 		Collections.sort(keys);
 		
 		
+		/*
 		//TODO:  we are not URL encoding these, which will cause a problem
 		//as soon as someone uses a '=' or a '&'
 		for(String k : methodParameters.keySet()){
+			//String v = URLEncoder.encode(methodParameters.get(k), "UTF-8");
+			//k = URLEncoder.encode(k,  );
+			
 			sb.append("&").append(k).append("=").append(methodParameters.get(k));
 		}
+		*/
+		
+		try{
+			for(Map.Entry<String, String> entry : methodParameters.entrySet()){
+				sb.append("&");
+				sb.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+				sb.append("=");
+				sb.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+			}
+		}catch(UnsupportedEncodingException ex){
+			//this should only happen if I spelled "UTF-8" wrong.
+			throw new RuntimeException(ex);
+		}
+		
+		
+		
+		
 		
 		return sb.toString();
 	}

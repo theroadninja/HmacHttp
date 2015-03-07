@@ -47,14 +47,34 @@ public class RequestSigner {
 			
 			return RequestSignerAux.calcTroubleshoot1Protocol(request, skey);
 			
+		}else if(SignedRequest.ProtocolVersions.TROUBLESHOOT_2.equals(request.getProtocolVersion())){
+			
+			return RequestSignerAux.calcTroubleshoot2Protocol(request, skey);
+			
+		}else if(SignedRequest.ProtocolVersions.TROUBLESHOOT_3.equals(request.getProtocolVersion())){
+			
+			return RequestSignerAux.calcTroubleshoot3Protocol(request, skey);
+			
+		}else if(SignedRequest.ProtocolVersions.TROUBLESHOOT_4.equals(request.getProtocolVersion())){
+			
+			return RequestSignerAux.calcTroubleshoot4Protocol(request, skey);
+			
 		}else if(SignedRequest.ProtocolVersions.LEGACY.equals(request.getProtocolVersion())){
+			
 			return calcSignatureProtocol0(request, skey);
+			
 		}else if(SignedRequest.ProtocolVersions.V1.equals(request.getProtocolVersion())){
+			
 			return RequestSignerV1.get().calcSignature(request, skey);
+			
 		}else{
 			throw new HmacHttpException("protocol version not recognized: " + request.getProtocolVersion());
 		}
 		
+	}
+	
+	public static String calcProtocol0fragment(SignedRequest request){
+		return request.getRequestId() + ";" + request.getMethodParameterString() + ";" + request.getMethod();
 	}
 	
 	private static String calcSignatureProtocol0(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException{
@@ -69,6 +89,17 @@ public class RequestSigner {
 		key = hmac(key, signableRequest);
 		
 		return new String(Base64.encodeBase64(key)).replaceAll("=+$", "");
+	}
+	
+	public static byte[] hmac(byte[] keyBytes, String ... messages) throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException {
+		if(keyBytes == null || messages == null || messages.length == 0){
+			throw new IllegalArgumentException();
+		}
+		
+		for(String m : messages){
+			keyBytes = hmac(keyBytes, m);
+		}
+		return keyBytes;
 	}
 	
 	public static byte[] hmac(byte[] keyBytes, String message) throws NoSuchAlgorithmException, InvalidKeyException, IllegalStateException, UnsupportedEncodingException {
