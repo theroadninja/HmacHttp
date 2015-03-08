@@ -221,6 +221,8 @@ public class SimpleSignedRequest implements SignedRequest {
 		}
 		*/
 		
+		//this doesnt work, because of different implementations of "encode", even within java
+		/*
 		try{
 			for(Map.Entry<String, String> entry : methodParameters.entrySet()){
 				sb.append("&");
@@ -232,8 +234,14 @@ public class SimpleSignedRequest implements SignedRequest {
 			//this should only happen if I spelled "UTF-8" wrong.
 			throw new RuntimeException(ex);
 		}
+		*/
 		
-		
+		for(Map.Entry<String, String> entry : methodParameters.entrySet()){
+			sb.append("&");
+			sb.append(entry.getKey());
+			sb.append("=");
+			sb.append(entry.getValue());
+		}
 		
 		
 		

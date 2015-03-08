@@ -60,7 +60,9 @@ class SSRequest
 		sortedKeys = @fields.keys.sort
     parameters = ""
 		sortedKeys.each{|k|
-      parameters = parameters + "&" + Hmac.urlEscape(k) + "=" + Hmac.urlEscape(@fields[k].to_s) 
+		  #cannot use standard escape methods, because of differences in how ruby/java does it
+      #parameters = parameters + "&" + Hmac.urlEscape(k) + "=" + Hmac.urlEscape(@fields[k].to_s) 
+		  parameters = parameters + "&" + k + "=" + @fields[k].to_s
 		}
 		@paramString = parameters
 		
