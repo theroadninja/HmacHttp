@@ -37,6 +37,9 @@ public class RequestSigner {
 	}
 	
 	public static String calcSignature(SignedRequest request, String skey) throws DecoderException, InvalidKeyException, NoSuchAlgorithmException, IllegalStateException, UnsupportedEncodingException, HmacHttpException {
+		if(skey == null){
+			throw new IllegalArgumentException();
+		}
 		if(request == null){ return null; }
 	
 		if(SignedRequest.ProtocolVersions.KEY_CHECK.equals(request.getProtocolVersion())){
